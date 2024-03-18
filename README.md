@@ -15,13 +15,18 @@ If the tools don't exist (in the PATH) the makefile tries to run the tools in Do
 ## Usage
 
 After cloning the repo checkout the submodule:
-```
+```shell
 git submodule update --init --recursive
 ```
 
 And then run:
-```
+```shell
 make
+```
+
+To have an easy way of using the different tools in Docker from the command line a script is included to source the aliases:
+```shell
+source docker-alias.rc
 ```
 
 ## Components
