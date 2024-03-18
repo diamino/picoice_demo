@@ -1,0 +1,5 @@
+alias yosys='docker run --rm -it -v /`pwd`://wrk -w //wrk ghdl/synth:beta yosys'
+alias nextpnr-ice40='docker run --rm -it -v /`pwd`://wrk -w //wrk ghdl/synth:nextpnr nextpnr-ice40'
+alias icepack='docker run --rm -it -v /`pwd`://wrk -w //wrk ghdl/synth:icestorm icepack'
+alias icepll='docker run --rm -it -v /`pwd`://wrk -w //wrk ghdl/synth:icestorm icepll'
+alias ghdl='docker run --rm -it -v /`pwd`://wrk -w //wrk ghdl/synth:beta ghdl'
