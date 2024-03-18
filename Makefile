@@ -5,8 +5,9 @@ DEVICE = up5k
 PACKAGE = sg48
 
 TOP_LEVEL = demo
-VHDL_FILES = demo.vhdl rom.vhdl uart/source/uart.vhd
-VERILOG_FILES = pll.v
+#VHDL_FILES = demo.vhdl rom.vhdl uart/source/uart.vhd
+VHDL_FILES = demo.vhdl rom.vhdl pll.vhdl uart/source/uart.vhd
+#VERILOG_FILES = pll.v
 
 DOCKER_CMD = docker run --rm -it -v /$(shell pwd)://wrk -w //wrk
 ifeq (, $(shell which icepack))

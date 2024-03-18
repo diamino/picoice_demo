@@ -8,7 +8,7 @@ The following tools need to be installed in order to succesfully run the makefil
 * `yosys` including the GHDL plugin
 * `nextpnr-ice40`
 * `icepack`
-* `iceprog`
+* `iceprog` (only for programming: `make prog`)
 
 If the tools don't exist (in the PATH) the makefile tries to run the tools in Docker.
 
@@ -27,4 +27,4 @@ make
 ## Components
  * UART - Sends data from ROM when data is received.
  * ROM - Stores a small piece of text
- * PLL - The PLL is described in verilog and instantiated in VHDL. It is not necessary to use the PLL for this project, it is just instantiated to demonstrate its use. The PLL verilog file was created using this command: `icepll -i 12 -o 60 -p -m -f pll.v`.
+ * PLL - The PLL was originally described in verilog and instantiated in VHDL. A VHDL version of the PLL module (created manually) is now used. It is not necessary to use the PLL for this project, it is just instantiated to demonstrate its use. The PLL verilog file was created using this command: `icepll -i 12 -o 60 -p -m -f pll.v`.
