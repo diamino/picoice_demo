@@ -24,7 +24,16 @@ And then run:
 make
 ```
 
-To have an easy way of using the different tools in Docker from the command line a script is included to source the aliases:
+To run a simulation using the default entity `blinker_tb` and default time (1ms):
+```shell
+make sim
+```
+or to simulate a different entity using a different simulation time:
+```shell
+make sim SIM_ENTITY=counter_tb SIM_TIME=100ns
+```
+
+To have an easy way of using the different tools in Docker from a shell a script is included to source the aliases:
 ```shell
 source docker-alias.rc
 ```

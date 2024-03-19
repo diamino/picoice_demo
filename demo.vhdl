@@ -29,6 +29,7 @@ architecture behav of demo is
       locked : out std_logic
     );
   end component pll;
+
 begin
 
   pll_inst : pll
@@ -62,6 +63,14 @@ begin
       clk => clk,
       addr => std_logic_vector(rom_addr),
       q => uart_tx_data
+    );
+  
+  blinker_inst : entity work.blinker
+    port map(
+      clk => clk,
+      rst => rst,
+      out1 => leds(2),
+      out2 => leds(3)
     );
 
   -- Reset signal generation

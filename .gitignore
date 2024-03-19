@@ -3,3 +3,7 @@ abc.history
 *.json
 *.asc
 *.bin
+
+# Simulation artifacts
+*.ghw
+*.vcd

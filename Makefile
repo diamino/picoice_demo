@@ -6,7 +6,10 @@ PACKAGE = sg48
 
 TOP_LEVEL = demo
 #VHDL_FILES = demo.vhdl rom.vhdl uart/source/uart.vhd
-VHDL_FILES = demo.vhdl rom.vhdl pll.vhdl uart/source/uart.vhd
+VHDL_FILES = demo.vhdl rom.vhdl pll.vhdl blinker.vhdl uart/source/uart.vhd
+TESTBENCH_FILES = blinker-tb.vhdl
+SIM_ENTITY ?= blinker_tb
+SIM_TIME ?= 1ms
 #VERILOG_FILES = pll.v
 
 DOCKER_CMD = docker run --rm -it -v /$(shell pwd)://wrk -w //wrk
@@ -24,6 +27,11 @@ ifeq (, $(shell which yosys))
  YOSYS = $(DOCKER_CMD) ghdl/synth:beta yosys
 else
  YOSYS = yosys
+endif
+ifeq (, $(shell which ghdl))
+ GHDL = $(DOCKER_CMD) ghdl/synth:beta ghdl
+else
+ GHDL = ghdl
 endif
 ICEPROG = iceprog
 
@@ -50,6 +58,12 @@ prog: $(PROJ).bin
 
 clean:
 	rm -f $(PROJ).json $(PROJ).asc $(PROJ).bin
+
+sim:
+	$(GHDL) -c $(VHDL_FILES) $(TESTBENCH_FILES) -r $(SIM_ENTITY) --vcd=$(SIM_ENTITY).vcd --wave=$(SIM_ENTITY).ghw --stop-time=$(SIM_TIME)
+
+sim_clean:
+	rm -f $(SIM_ENTITY).ghw $(SIM_ENTITY).vcd
 
 .SECONDARY:
 
