@@ -3,3 +3,6 @@ alias nextpnr-ice40='docker run --rm -it -v /`pwd`://wrk -w //wrk ghdl/synth:nex
 alias icepack='docker run --rm -it -v /`pwd`://wrk -w //wrk ghdl/synth:icestorm icepack'
 alias icepll='docker run --rm -it -v /`pwd`://wrk -w //wrk ghdl/synth:icestorm icepll'
 alias ghdl='docker run --rm -it -v /`pwd`://wrk -w //wrk ghdl/synth:beta ghdl'
+alias bin2uf2='docker run --rm -it -v /`pwd`://wrk -w //wrk diamino/uf2utils bin2uf2'
+alias uf22bin='docker run --rm -it -v /`pwd`://wrk -w //wrk diamino/uf2utils uf22bin'
+alias uf2dump='docker run --rm -it -v /`pwd`://wrk -w //wrk diamino/uf2utils uf2dump'

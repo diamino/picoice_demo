@@ -8,6 +8,7 @@ The following tools need to be installed in order to succesfully run the makefil
 * `yosys` including the GHDL plugin
 * `nextpnr-ice40`
 * `icepack`
+* `bin2uf2` (to build the UF2 file: `make uf2`)
 * `iceprog` (only for programming: `make prog`)
 
 If the tools don't exist (in the PATH) the makefile tries to run the tools in Docker.
@@ -22,6 +23,11 @@ git submodule update --init --recursive
 And then run:
 ```shell
 make
+```
+
+To generate the UF2 file for the Pico-ICE:
+```shell
+make uf2
 ```
 
 To run a simulation using the default entity `blinker_tb` and default time (1ms):

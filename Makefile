@@ -33,6 +33,11 @@ ifeq (, $(shell which ghdl))
 else
  GHDL = ghdl
 endif
+ifeq (, $(shell which ghdl))
+ BIN2UF2 = $(DOCKER_CMD) diamino/uf2utils bin2uf2
+else
+ BIN2UF2 = bin2uf2
+endif
 ICEPROG = iceprog
 
 ifneq ($(VERILOG_FILES),)
@@ -56,8 +61,11 @@ all: $(PROJ).bin
 prog: $(PROJ).bin
 	$(ICEPROG) $<
 
+uf2: $(PROJ).bin
+	$(BIN2UF2) -o $(PROJ).uf2 $<
+
 clean:
-	rm -f $(PROJ).json $(PROJ).asc $(PROJ).bin
+	rm -f $(PROJ).json $(PROJ).asc $(PROJ).bin $(PROJ).uf2
 
 sim:
 	$(GHDL) -c $(VHDL_FILES) $(TESTBENCH_FILES) -r $(SIM_ENTITY) --vcd=$(SIM_ENTITY).vcd --wave=$(SIM_ENTITY).ghw --stop-time=$(SIM_TIME)

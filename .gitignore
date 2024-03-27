@@ -3,6 +3,7 @@ abc.history
 *.json
 *.asc
 *.bin
+*.uf2
 
 # Simulation artifacts
 *.ghw
