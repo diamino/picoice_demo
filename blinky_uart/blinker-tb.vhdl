@@ -16,7 +16,7 @@ ARCHITECTURE behavior OF blinker_tb IS
     PORT(
          clk : in std_logic;
          rst : in std_logic;
-         out1, out2 : out std_logic
+         out1, out2, out3 : out std_logic
         );
     END COMPONENT;
 
@@ -25,7 +25,7 @@ ARCHITECTURE behavior OF blinker_tb IS
    signal rst : std_logic := '1';
 
  	--Outputs
-   signal led1, led2 : std_logic;
+   signal led1, led2, led3 : std_logic;
 
    -- Clock period definitions
    constant clk12_period : time := 83 ns;
@@ -37,7 +37,8 @@ BEGIN
           clk => clk,
           rst => rst,
           out1 => led1,
-          out2 => led2
+          out2 => led2,
+          out3 => led3
         );
 
    -- Clock process definitions

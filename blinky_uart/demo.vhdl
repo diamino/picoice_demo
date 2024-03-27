@@ -69,8 +69,9 @@ begin
     port map(
       clk => clk,
       rst => rst,
-      out1 => leds(2),
-      out2 => open
+      out1 => leds(1),
+      out2 => leds(2),
+      out3 => leds(3)
     );
 
   -- Reset signal generation
@@ -116,7 +117,7 @@ begin
 
   (led1, led2, led3) <= leds;
 
-  leds(1) <= uart_tx_send;
+  --leds(1) <= uart_tx_send;
 
   rst <= not nrst;
 
