@@ -2,6 +2,8 @@
 Basic VHDL demo project using the opensource toolchain for the ICE40 FPGAs, involving ghdl-yosys-plugin, yosys, nextpnr and icestorm.
 The Makefile can use docker containers to compile the project.
 
+This example is based on the [icestick_demo](https://github.com/flaminggoat/icestick_demo) by [flaminggoat](https://github.com/flaminggoat).
+
 ## Requirements
 
 The following tools need to be installed in order to succesfully run the makefile:
@@ -20,7 +22,7 @@ After cloning the repo checkout the submodule:
 git submodule update --init --recursive
 ```
 
-And then run:
+And then in the folder of the examples run:
 ```shell
 make
 ```
@@ -44,7 +46,7 @@ To have an easy way of using the different tools in Docker from a shell a script
 source docker-alias.rc
 ```
 
-## Components
+## Components of the `blinky_uart` example
  * UART - Sends data from ROM when data is received.
  * ROM - Stores a small piece of text
  * PLL - The PLL was originally described in verilog and instantiated in VHDL. A VHDL version of the PLL module (created manually) is now used. It is not necessary to use the PLL for this project, it is just instantiated to demonstrate its use. The PLL verilog file was created using this command: `icepll -i 12 -o 60 -p -m -f pll.v`.

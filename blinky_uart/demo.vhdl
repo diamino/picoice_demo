@@ -70,7 +70,7 @@ begin
       clk => clk,
       rst => rst,
       out1 => leds(2),
-      out2 => leds(3)
+      out2 => open
     );
 
   -- Reset signal generation
