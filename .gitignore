@@ -4,6 +4,7 @@ abc.history
 *.asc
 *.bin
 *.uf2
+*.log
 
 # Simulation artifacts
 *.ghw

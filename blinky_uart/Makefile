@@ -50,10 +50,10 @@ all: $(PROJ).bin
 	$(YOSYS) -m ghdl -p \
 		"ghdl $^ -e $(TOP_LEVEL); \
 		$(MAYBE_READ_VERILOG) \
-		synth_ice40 -json $@"
+		synth_ice40 -json $@" > $(PROJ)_yosys.log
 
 %.asc: %.json
-	$(NEXTPNR) --$(DEVICE) --package $(PACKAGE) --pcf $(PIN_DEF) --pcf-allow-unconstrained --json $< --asc $@
+	$(NEXTPNR) --$(DEVICE) --package $(PACKAGE) --pcf $(PIN_DEF) --pcf-allow-unconstrained --json $< --asc $@ > $(PROJ)_nextpnr.log
 
 %.bin: %.asc
 	$(ICEPACK) $< $@
@@ -65,7 +65,7 @@ uf2: $(PROJ).bin
 	$(BIN2UF2) -o $(PROJ).uf2 $<
 
 clean:
-	rm -f $(PROJ).json $(PROJ).asc $(PROJ).bin $(PROJ).uf2
+	rm -f $(PROJ).json $(PROJ).asc $(PROJ).bin $(PROJ).uf2 $(PROJ)_*.log
 
 sim:
 	$(GHDL) -c $(VHDL_FILES) $(TESTBENCH_FILES) -r $(SIM_ENTITY) --vcd=$(SIM_ENTITY).vcd --wave=$(SIM_ENTITY).ghw --stop-time=$(SIM_TIME)
