@@ -39,6 +39,7 @@ else
  BIN2UF2 = bin2uf2
 endif
 ICEPROG = iceprog
+GTKWAVE ?= gtkwave
 
 ifneq ($(VERILOG_FILES),)
 MAYBE_READ_VERILOG = read_verilog $(VERILOG_FILES);
@@ -69,6 +70,9 @@ clean:
 
 sim:
 	$(GHDL) -c $(VHDL_FILES) $(TESTBENCH_FILES) -r $(SIM_ENTITY) --vcd=$(SIM_ENTITY).vcd --wave=$(SIM_ENTITY).ghw --stop-time=$(SIM_TIME)
+
+sim_show:
+	$(GTKWAVE) $(SIM_ENTITY).ghw
 
 sim_clean:
 	rm -f $(SIM_ENTITY).ghw $(SIM_ENTITY).vcd
