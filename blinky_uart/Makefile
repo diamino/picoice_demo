@@ -47,6 +47,8 @@ endif
 
 all: $(PROJ).bin
 
+sim: $(SIM_ENTITY).ghw
+
 %.json: $(VHDL_FILES) %.vhdl
 	$(YOSYS) -m ghdl -p \
 		"ghdl $^ -e $(TOP_LEVEL); \
@@ -68,11 +70,11 @@ uf2: $(PROJ).bin
 clean:
 	rm -f $(PROJ).json $(PROJ).asc $(PROJ).bin $(PROJ).uf2 $(PROJ)_*.log
 
-sim:
-	$(GHDL) -c $(VHDL_FILES) $(TESTBENCH_FILES) -r $(SIM_ENTITY) --vcd=$(SIM_ENTITY).vcd --wave=$(SIM_ENTITY).ghw --stop-time=$(SIM_TIME)
+%.ghw:
+	$(GHDL) -c $(VHDL_FILES) $(TESTBENCH_FILES) -r $* --vcd=$*.vcd --wave=$@ --stop-time=$(SIM_TIME)
 
-sim_show:
-	$(GTKWAVE) $(SIM_ENTITY).ghw
+sim_show: $(SIM_ENTITY).ghw
+	$(GTKWAVE) $<
 
 sim_clean:
 	rm -f $(SIM_ENTITY).ghw $(SIM_ENTITY).vcd
