@@ -11,6 +11,7 @@ The following tools need to be installed in order to succesfully run the makefil
 * `nextpnr-ice40`
 * `icepack`
 * `bin2uf2` (to build the UF2 file: `make uf2`)
+* `dfu-util` (to load directly to CRAM: `make cram`)
 * `iceprog` (only for programming: `make prog`)
 
 If the tools don't exist (in the PATH) the makefile tries to run the tools in Docker.
@@ -31,6 +32,13 @@ To generate the UF2 file for the Pico-ICE:
 ```shell
 make uf2
 ```
+
+To load the bitstream directly to configuration memory:
+```shell
+make cram
+```
+
+## Simulation
 
 To run a simulation using the default entity `blinker_tb` and default time (1ms):
 ```shell

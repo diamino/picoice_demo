@@ -39,6 +39,7 @@ else
  BIN2UF2 = bin2uf2
 endif
 ICEPROG = iceprog
+DFUUTIL = dfu-util
 GTKWAVE ?= gtkwave
 
 ifneq ($(VERILOG_FILES),)
@@ -66,6 +67,9 @@ prog: $(PROJ).bin
 
 uf2: $(PROJ).bin
 	$(BIN2UF2) -o $(PROJ).uf2 $<
+
+cram: $(PROJ).bin
+	$(DFUUTIL) -a 1 -D $<
 
 clean:
 	rm -f $(PROJ).json $(PROJ).asc $(PROJ).bin $(PROJ).uf2 $(PROJ)_*.log
