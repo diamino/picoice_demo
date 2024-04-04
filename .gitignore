@@ -9,3 +9,6 @@ abc.history
 # Simulation artifacts
 *.ghw
 *.vcd
+
+.vscode/
+.micropico
