@@ -6,18 +6,29 @@ Thanks to Electronut (https://forum.micropython.org/viewtopic.php?t=12431)
 '''
 import os
 import serial
+import serial.tools.list_ports as slp
 import struct
 import sys
 
 
 TIMEOUT = 10
 
-if len(sys.argv) != 3:
+if len(sys.argv) <= 1:
     print(f"Usage: {sys.argv[0]} binary_file serial_port")
     sys.exit(1)
 # file name
 filename = sys.argv[1]
-port = sys.argv[2]
+if len(sys.argv) < 3:
+    g = slp.grep("Board in FS mode")
+    try:
+        sp = next(g)
+    except StopIteration:
+        print("No suitable serial port found!")
+        print(f"Try: {sys.argv[0]} binary_file serial_port")
+        sys.exit(1)
+    port = sp.device
+else:
+    port = sys.argv[2]
 
 # open serial
 ser = serial.Serial(port, 115200)

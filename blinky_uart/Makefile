@@ -40,6 +40,7 @@ else
 endif
 ICEPROG = iceprog
 DFUUTIL = dfu-util
+UPY_SEND = ../micropython/send_bitstream.py
 GTKWAVE ?= gtkwave
 
 ifneq ($(VERILOG_FILES),)
@@ -70,6 +71,9 @@ uf2: $(PROJ).bin
 
 cram: $(PROJ).bin
 	$(DFUUTIL) -a 1 -D $<
+
+cram_upy: $(PROJ).bin
+	$(UPY_SEND) $<
 
 clean:
 	rm -f $(PROJ).json $(PROJ).asc $(PROJ).bin $(PROJ).uf2 $(PROJ)_*.log
