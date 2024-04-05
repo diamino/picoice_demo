@@ -1,4 +1,4 @@
-# Icestorm VDHL Pico-ICE Demo
+# Icestorm VHDL Pico-ICE Demo
 Basic VHDL demo project using the opensource toolchain for the ICE40 FPGAs, involving ghdl-yosys-plugin, yosys, nextpnr and icestorm.
 The Makefile can use docker containers to compile the project.
 
