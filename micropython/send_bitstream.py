@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 Script to send a bitstream (or any arbitrary binary file) via a serial port
 

@@ -30,8 +30,11 @@ ICE_FPGA_CLOCK_PIN = 24
 ICE_FPGA_CDONE_PIN = 26
 ICE_FPGA_CRESET_B_PIN = 27
 
-BOOT_WAIT = 10
+NORMAL_BOOT_ENABLE = False
+BOOT_WAIT = 15
 WAIT_AFTER_CRAM_LOAD = 5
+CHUNK_SIZE_DEFAULT = 128
+SPI_SM_FREQ = 12_000_000
 
 cram_sm = None
 
@@ -88,8 +91,8 @@ def ice_cram():
 
 def ice_cram_state_machine_init():
     global cram_sm
-    cram_sm = rp2.StateMachine(1, ice_cram,
-                               freq=1_000_000,
+    cram_sm = rp2.StateMachine(0, ice_cram,
+                               freq=SPI_SM_FREQ,
                                out_base=Pin(ICE_SPI_RX_PIN),
                                sideset_base=Pin(ICE_SPI_SCK_PIN))
     cram_sm.active(1)
@@ -155,7 +158,7 @@ def ice_cram_close():
     cram_wait_idle()
 
 
-def receive_bitstream():
+def receive_bitstream(wait_after_load, chunk_size=CHUNK_SIZE_DEFAULT):
     # ignore keyboard interrupts
     micropython.kbd_intr(-1)
 
@@ -167,7 +170,6 @@ def receive_bitstream():
 
     ba = bytearray(file_size)
 
-    chunk_size = 128
     n_chunks = file_size // chunk_size
     remaining = file_size - (n_chunks * chunk_size)
 
@@ -184,10 +186,19 @@ def receive_bitstream():
 
     # reenable keyboard interrupts
     micropython.kbd_intr(3)
-    time.sleep(WAIT_AFTER_CRAM_LOAD)
+    time.sleep(wait_after_load)
     print(f"Received bitstream size: {file_size} bytes...")
     print(f"Last 6 bytes: {bytes(ba[-6:]).hex()}")
     return ba
+
+
+def cram_load_from_serial(wait_after_load):
+    bitstream = receive_bitstream(wait_after_load)
+    ice_cram_open()
+    ice_cram_write(bitstream)
+    ice_cram_close()
+    del bitstream
+    return True
 
 
 def main():
@@ -196,17 +207,16 @@ def main():
     spoll = select.poll()
     spoll.register(sys.stdin, select.POLLIN)
     print("Ready to receive bitstream...")
-    c = sys.stdin.read(1) if spoll.poll(BOOT_WAIT * 1000) else None
+    while True:
+        c = sys.stdin.read(1) if spoll.poll(BOOT_WAIT * 1000) else None
+        if c == '\x06':
+            cram_load_from_serial(WAIT_AFTER_CRAM_LOAD)
+            print("Bitstream loaded into CRAM...")
+        if NORMAL_BOOT_ENABLE:
+            break
     spoll.unregister(sys.stdin)
-    if c == '\x06':
-        bitstream = receive_bitstream()
-        ice_cram_open()
-        ice_cram_write(bitstream)
-        ice_cram_close()
-        del bitstream
-        print("Bitstream loaded into CRAM...")
-    else:
-        print("Normal boot...")
+
+    print("Normal boot...")
 
 
 if __name__ == '__main__':
