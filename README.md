@@ -59,7 +59,7 @@ source docker-alias.rc
 
 ## Micropython
 
-The micropython folder contains modules to use the ICE FPGA on the Pico-ICE in combination with MicroPython running on the RP2040. Load all the modules on the RP2040 (exclude `send_bitstream.py`). Make sure to rename `pico-ice.py` to `boot.py`. This will put the Pico-ICE in configuration mode on power-on. By default the RP2040 stays in an infinite configuration loop. To enable normal boot after a certain time-out change the `NORMAL_BOOT_ENABLE` and `BOOT_WAIT` constants in `pico-ice.py`.
+The micropython folder contains modules to use the ICE FPGA on the Pico-ICE in combination with MicroPython running on the RP2040. Load all the modules on the RP2040 (exclude `send_bitstream.py`). Make sure to rename `pico-ice.py` to `main.py`. This will put the Pico-ICE in configuration mode on power-on. By default the RP2040 stays in an infinite configuration loop. To enable normal boot after a certain time-out change the `NORMAL_BOOT_ENABLE` and `BOOT_WAIT` constants in `pico-ice.py`.
 
 The Makefiles in the VHDL examples contain a target `make cram_upy` to load the bitstream into CRAM at the end of the make process using the `send_bitstream.py` script. This script requires the `pyserial` package to be installed (`pip install pyserial`). 
 
