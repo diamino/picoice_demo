@@ -43,29 +43,31 @@ begin
   end process;
 
   process (clk)
+    variable leds: std_logic_vector(7 downto 0) := (others => '1');
   begin
     if rst = '1' then
-      leds <= "11111110";
+      leds := "11111110";
       dir_state <= left; 
     elsif rising_edge(clk) then
       if pclk = '1' then
         case dir_state is
           when left =>
-            if leds(6) = '0' then
+            leds := leds(6 downto 0) & '1'; 
+            if leds(7) = '0' then
               dir_state <= right;
             end if;
-            leds <= leds(6 downto 0) & '1'; 
           when right =>
-            if leds(1) = '0' then
+            leds := '1' & leds(7 downto 1);
+            if leds(0) = '0' then
               dir_state <= left;
             end if;
-            leds <= '1' & leds(7 downto 1);
         end case;
       end if;
     end if;
+    led_o <= std_logic_vector(leds);
   end process;
 
-  led_o <= leds;
+  -- led_o <= leds;
 
   rst <= not nrst;
 
