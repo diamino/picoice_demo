@@ -1,6 +1,7 @@
 # Icestorm VHDL Pico-ICE Demo
 Basic VHDL demo projects using the opensource toolchain for the ICE40 FPGAs, involving ghdl-yosys-plugin, yosys, nextpnr and icestorm.
 The Makefile can use docker containers to compile the project.
+This repository now also contains MicroPython modules (and a Python script) which enable the use of MicroPython on the RP2040 in combination with the ICE FPGA. See below for details.
 
 This example is based on the [icestick_demo](https://github.com/flaminggoat/icestick_demo) by [flaminggoat](https://github.com/flaminggoat).
 
