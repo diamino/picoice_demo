@@ -8,6 +8,7 @@ import select
 import micropython
 import icefpga
 import icecram
+import iceflash
 
 NORMAL_BOOT_ENABLE = False
 BOOT_WAIT = 15
@@ -60,6 +61,19 @@ def cram_load_from_serial(wait_after_load):
     return True
 
 
+def flash_load_from_serial(wait_after_load):
+    bitstream = receive_bitstream()
+
+    time.sleep(wait_after_load)
+    print(f"Received bitstream size: {len(bitstream)} bytes...")
+    print(f"Last 6 bytes: {bytes(bitstream[-6:]).hex()}")
+
+    iceflash.ice_flash_open()
+    iceflash.ice_flash_write(0, bitstream)
+    del bitstream
+    icefpga.ice_fpga_start()
+
+
 def main():
     icefpga.ice_fpga_init(12)
     icefpga.ice_fpga_start()
@@ -71,6 +85,9 @@ def main():
         if c == '\x06':
             cram_load_from_serial(WAIT_AFTER_CRAM_LOAD)
             print("Bitstream loaded into CRAM...")
+        elif c == '\x07':
+            flash_load_from_serial(WAIT_AFTER_CRAM_LOAD)
+            print("Bitstream loaded into Flash...")
         if NORMAL_BOOT_ENABLE:
             break
     spoll.unregister(sys.stdin)
