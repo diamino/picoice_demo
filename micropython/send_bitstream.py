@@ -43,11 +43,14 @@ else:
         sys.exit(1)
     port = sp.device
 
+print(f'>>> Pico-ICE MicroPython bitstream loader v{VERSION} <<<\n')
+
 # open serial
 ser = serial.Serial(port, 115200)
 
 file_size = os.path.getsize(filename)
-print(f"File size = {file_size} bytes.")
+print(f"File size = {file_size} bytes")
+print(f"Target: {args.target}")
 
 with open(filename, "rb") as fp:
 
@@ -71,17 +74,17 @@ with open(filename, "rb") as fp:
             bytes = fp.read(chunk_size)
             nbytes += len(bytes)
             if not bytes:
-                print("Done, break.")
+                print("\nDone...")
                 break
-            print("Wait for ACK...")
+            # print("Wait for ACK...")
             ser.read_until(expected=b'\x06', size=1)
-            print("ACK received...")
+            print(".", end='', flush=True)
             ser.write(bytes)
             ser.flush()
-            print(f"Wrote {nbytes} bytes...")
+        print(f"Wrote {nbytes} bytes...")
     except Exception as e:
         print(e)
 
-    print("Closing...")
+    # print("Closing...")
 
 ser.close()
