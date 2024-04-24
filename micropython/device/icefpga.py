@@ -4,7 +4,7 @@ Module for Pico-ICE to control the FPGA
 import time
 import machine
 from machine import Pin
-from icepins import (ICE_FPGA_CLOCK_PIN, 
+from icepins import (ICE_FPGA_CLOCK_PIN,
                      ICE_FPGA_RGB0_PIN,
                      ICE_FPGA_RGB1_PIN,
                      ICE_FPGA_RGB2_PIN,

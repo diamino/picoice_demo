@@ -5,11 +5,11 @@ from machine import SPI, Pin
 import icefpga
 import time
 import struct
+from icepins import (ICE_SPI_SCK_PIN,
+                     ICE_SPI_RX_PIN,
+                     ICE_SPI_TX_PIN,
+                     ICE_FLASH_CSN_PIN)
 
-ICE_FLASH_CSN_PIN = 9
-ICE_SPI_SCK_PIN = 10
-ICE_SPI_RX_PIN = 8
-ICE_SPI_TX_PIN = 11
 ICE_SPI_BAUDRATE = 1_000_000
 
 ICE_FLASH_BLOCK_SIZE = 65536
