@@ -56,7 +56,7 @@ with open(filename, "rb") as fp:
 
     # send ack to signal bitstream transmission
     ser.write(b'\x06')
-    print("Wait for ACK...")
+    print("\nWait for ACK...")
     ser.read_until(expected=b'\x06', size=1)
     print("ACK received...")
 

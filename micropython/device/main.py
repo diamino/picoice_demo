@@ -17,6 +17,8 @@ def main():
         if NORMAL_BOOT_ENABLE:
             break
 
+    # Add your own code here that will run after configuration (time-out)
+    # when the NORMAL_BOOT_ENABLE flag is set.
     print("Normal boot...")
 
 
