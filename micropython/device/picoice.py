@@ -11,8 +11,9 @@ import icecram
 import iceflash
 
 NORMAL_BOOT_ENABLE = False
+TRANS_TIMEOUT = 15
 BOOT_WAIT = 15
-WAIT_AFTER_CRAM_LOAD = 5
+WAIT_AFTER_CRAM_LOAD = 1
 CHUNK_SIZE_DEFAULT = 128
 
 
@@ -22,9 +23,9 @@ def receive_bitstream(chunk_size=CHUNK_SIZE_DEFAULT):
 
     sys.stdout.write('\x06')
 
-    # get file size in 4 byte header
-    header = sys.stdin.buffer.read(4)
-    file_size = struct.unpack('<L', header)[0]
+    # get target and file size in 6 byte header
+    header = sys.stdin.buffer.read(6)
+    target, _, file_size = struct.unpack('<BBL', header)
 
     ba = bytearray(file_size)
 
@@ -44,53 +45,47 @@ def receive_bitstream(chunk_size=CHUNK_SIZE_DEFAULT):
 
     # reenable keyboard interrupts
     micropython.kbd_intr(3)
-    return ba
+    return target, ba
 
 
-def cram_load_from_serial(wait_after_load):
-    bitstream = receive_bitstream()
+def load_from_serial(wait_after_load):
+    target, bitstream = receive_bitstream()
 
     time.sleep(wait_after_load)
     print(f"Received bitstream size: {len(bitstream)} bytes...")
     print(f"Last 6 bytes: {bytes(bitstream[-6:]).hex()}")
 
-    icecram.ice_cram_open()
-    icecram.ice_cram_write(bitstream)
-    icecram.ice_cram_close()
+    if target == 1:
+        icecram.ice_cram_open()
+        icecram.ice_cram_write(bitstream)
+        icecram.ice_cram_close()
+    elif target == 2:
+        iceflash.ice_flash_open()
+        iceflash.ice_flash_write(0, bitstream)
+        icefpga.ice_fpga_start()
+
     del bitstream
     return True
 
 
-def flash_load_from_serial(wait_after_load):
-    bitstream = receive_bitstream()
-
-    time.sleep(wait_after_load)
-    print(f"Received bitstream size: {len(bitstream)} bytes...")
-    print(f"Last 6 bytes: {bytes(bitstream[-6:]).hex()}")
-
-    iceflash.ice_flash_open()
-    iceflash.ice_flash_write(0, bitstream)
-    del bitstream
-    icefpga.ice_fpga_start()
+def wait_for_transmission(timeout=TRANS_TIMEOUT):
+    spoll = select.poll()
+    spoll.register(sys.stdin, select.POLLIN)
+    c = sys.stdin.read(1) if spoll.poll(timeout * 1000) else None
+    if c == '\x06':
+        load_from_serial(WAIT_AFTER_CRAM_LOAD)
+        print("Bitstream loaded...")
+    spoll.unregister(sys.stdin)
 
 
 def main():
     icefpga.ice_fpga_init(12)
     icefpga.ice_fpga_start()
-    spoll = select.poll()
-    spoll.register(sys.stdin, select.POLLIN)
     print("Ready to receive bitstream...")
     while True:
-        c = sys.stdin.read(1) if spoll.poll(BOOT_WAIT * 1000) else None
-        if c == '\x06':
-            cram_load_from_serial(WAIT_AFTER_CRAM_LOAD)
-            print("Bitstream loaded into CRAM...")
-        elif c == '\x07':
-            flash_load_from_serial(WAIT_AFTER_CRAM_LOAD)
-            print("Bitstream loaded into Flash...")
+        wait_for_transmission(BOOT_WAIT)
         if NORMAL_BOOT_ENABLE:
             break
-    spoll.unregister(sys.stdin)
 
     print("Normal boot...")
 

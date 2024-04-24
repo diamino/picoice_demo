@@ -9,26 +9,39 @@ import serial
 import serial.tools.list_ports as slp
 import struct
 import sys
+import argparse
 
+VERSION = "0.2"
 
-TIMEOUT = 10
+parser = argparse.ArgumentParser(description=f'Pico-ICE MicroPython bitstream loader v{VERSION}')  # noqa: E501
 
-if len(sys.argv) <= 1:
-    print(f"Usage: {sys.argv[0]} binary_file serial_port")
-    sys.exit(1)
-# file name
-filename = sys.argv[1]
-if len(sys.argv) < 3:
+parser.add_argument('filename', type=str,
+                    help='The binary (.bin) file to load')
+parser.add_argument('-t', '--target', type=str, choices=['cram', 'flash'], default='cram',
+                    help='The target to load the bitstream. Options: \'cram\' or \'flash\'. Defaults to \'cram\'.')  # noqa: E501
+parser.add_argument('-s', '--serial', type=str,
+                    help='Serial port to use. Tries to find a suitable port automatically when ommitted.')  # noqa: E501
+
+args = parser.parse_args()
+
+filename = args.filename
+
+if args.target == 'cram':
+    target = 1
+elif args.target == 'flash':
+    target = 2
+
+if args.serial:
+    port = args.serial
+else:
     g = slp.grep("Board in FS mode")
     try:
         sp = next(g)
     except StopIteration:
         print("No suitable serial port found!")
-        print(f"Try: {sys.argv[0]} binary_file serial_port")
+        print(f"Try: {sys.argv[0]} binary_file -s serial_port")
         sys.exit(1)
     port = sp.device
-else:
-    port = sys.argv[2]
 
 # open serial
 ser = serial.Serial(port, 115200)
@@ -44,8 +57,9 @@ with open(filename, "rb") as fp:
     ser.read_until(expected=b'\x06', size=1)
     print("ACK received...")
 
-    # send file size in 32 bit header
-    header = struct.pack('<L', file_size)
+    # send target and file size in 48 bit header
+    # | target | reserved | size(1) | size(2) | size(3) | size(4) |
+    header = struct.pack('<BBL', target, 0, file_size)
     ser.write(header)
     ser.flush()
 

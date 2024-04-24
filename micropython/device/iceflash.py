@@ -1,3 +1,6 @@
+'''
+Module for Pico-ICE FPGA flash handling
+'''
 from machine import SPI, Pin
 import icefpga
 import time
@@ -130,6 +133,8 @@ def ice_flash_open():
 
 
 def ice_flash_write(address: int, data: bytes):
+    if not spi:
+        return False
     for offset in range(0, len(data), ICE_FLASH_PAGE_SIZE):
         if ((address + offset) % ICE_FLASH_SECTOR_SIZE) == 0:
             erase_sector(address + offset)

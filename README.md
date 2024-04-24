@@ -1,7 +1,7 @@
 # Icestorm VHDL Pico-ICE Demo
 Basic VHDL demo projects using the opensource toolchain for the ICE40 FPGAs, involving ghdl-yosys-plugin, yosys, nextpnr and icestorm.
 The Makefile can use docker containers to compile the project.
-This repository now also contains MicroPython modules (and a Python script) which enable the use of MicroPython on the RP2040 in combination with the ICE FPGA. See below for details.
+This repository now also contains **MicroPython modules** (and a Python script) which enable the use of MicroPython on the RP2040 in combination with the ICE FPGA. See below for details.
 
 This example is based on the [icestick_demo](https://github.com/flaminggoat/icestick_demo) by [flaminggoat](https://github.com/flaminggoat).
 
@@ -59,9 +59,9 @@ source docker-alias.rc
 
 ## Micropython
 
-The micropython folder contains modules to use the ICE FPGA on the Pico-ICE in combination with MicroPython running on the RP2040. Load all the modules on the RP2040 (exclude `send_bitstream.py`). Make sure to rename `pico-ice.py` to `main.py`. This will put the Pico-ICE in configuration mode on power-on. By default the RP2040 stays in an infinite configuration loop. To enable normal boot after a certain time-out change the `NORMAL_BOOT_ENABLE` and `BOOT_WAIT` constants in `pico-ice.py`.
+The micropython folder contains modules to use the ICE FPGA on the Pico-ICE in combination with MicroPython running on the RP2040. When you have MicroPython installed on the RP2040 of the Pico-ICE upload all the modules in the `device` folder to the RP2040. The included `main.py` will put the Pico-ICE in configuration mode on power-on. By default the RP2040 stays in an infinite configuration loop. To enable normal boot after a certain time-out change the `NORMAL_BOOT_ENABLE` and `BOOT_WAIT` constants in `main.py`. 
 
-The Makefiles in the VHDL examples contain a target `make cram_upy` to load the bitstream into CRAM at the end of the make process using the `send_bitstream.py` script. This script requires the `pyserial` package to be installed (`pip install pyserial`). 
+The Makefiles in the VHDL examples contain targets `make cram_upy` and `make prog_upy` to load the bitstream into CRAM or Flash respectively at the end of the make process using the `send_bitstream.py` script. This script requires the `pyserial` package to be installed (`pip install pyserial`).
 
 ## Components of the `blinky_uart` example
  * UART - Sends data from ROM when data is received.

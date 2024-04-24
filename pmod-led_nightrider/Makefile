@@ -73,6 +73,9 @@ cram: $(PROJ).bin
 cram_upy: $(PROJ).bin
 	$(UPY_SEND) $<
 
+prog_upy: $(PROJ).bin
+	$(UPY_SEND) -t flash $<
+
 clean:
 	rm -f $(PROJ).json $(PROJ).asc $(PROJ).bin $(PROJ).uf2 $(PROJ)_*.log abc.history
 
